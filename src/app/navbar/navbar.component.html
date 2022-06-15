@@ -1,0 +1,13 @@
+<nav>
+    <ul>
+        <ng-container *ngIf="!authenticated">
+            <li><a routerLink="auth" routerLinkActive="active">Login/SingUp Form</a></li>
+        </ng-container>
+        <ng-container *ngIf="authenticated">
+            <li><a (click)="logout()">Logout</a></li>
+            <li><a routerLink="posts" routerLinkActive="active">See All Post Details</a></li>
+        </ng-container>
+
+        <!-- <li><a routerLink="dynamic-question-form" routerLinkActive="active">Dynamic Form</a></li> -->
+    </ul>
+</nav>

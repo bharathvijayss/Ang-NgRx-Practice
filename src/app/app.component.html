@@ -1,0 +1,8 @@
+<div style="display: flex; flex-direction: row; margin: 1rem;">
+    <div style="width: 20%; border-right: 2px solid black; ">
+        <app-navbar (logoutEvent)="logoutClicked($event)"></app-navbar>
+    </div>
+    <div style="width: 80%; padding: 2rem;">
+        <router-outlet></router-outlet>
+    </div>
+</div>

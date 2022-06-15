@@ -1,0 +1,23 @@
+<div *ngIf="!isAuthenticating">
+    <h4 style="text-decoration: underline;">{{isLogin? 'Login':'SignUp'}} Form</h4>
+    <form #authForm="ngForm" (ngSubmit)="validateCredentials()">
+        <div style="margin-bottom: 10px;">
+            <label for="uname">Email:</label> <br>
+            <input type="email" name="email" ngModel #emailRef="ngModel" required email>
+            <p class="error" *ngIf="emailRef.touched && emailRef.invalid">{{fetchErrorEmail(emailRef)}}</p>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label for="pwd">Password:</label> <br>
+            <input type="password" name="password" ngModel #passwordRef="ngModel" required minlength="6">
+            <p class="error" *ngIf="passwordRef.touched && passwordRef.invalid">{{fetchErrorPassword(passwordRef)}}</p>
+        </div>
+        <div>
+            <button type="submit" [disabled]="authForm.invalid"> {{isLogin? 'Login':'SignUp'}} </button> |
+            <button type="button" (click)="isLogin = !isLogin">Switch to {{!isLogin? 'Login':'SignUp'}}</button>
+        </div>
+    </form>
+    <p class="error" *ngIf="errorMsg !== ''">
+        {{errorMsg}}
+    </p>
+</div>
+<app-loader-spinner *ngIf="isAuthenticating"></app-loader-spinner>

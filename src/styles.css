@@ -1,0 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+app-loader-spinner {
+    margin-left: 50%;
+    margin-top: 50%;
+    transform: translate(-50%, -50%);
+}

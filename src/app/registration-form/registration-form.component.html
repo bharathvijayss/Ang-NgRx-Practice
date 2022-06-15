@@ -1,0 +1,42 @@
+<h1>Dynamic Question Form</h1>
+<form [formGroup]="dynamicForm" (ngSubmit)="submited()">
+    <ng-container formArrayName="runtimeControls">
+        <ng-container *ngFor="let controls of MainControls; let mainIndex = index;">
+            <div [formGroupName]="mainIndex">
+
+                <div style="border: 2px solid red; margin: 10px;" *ngIf="controls.value.questionType === 'input-box'">
+                    <label [for]="mainIndex">{{controls.value.question}}</label> <br>
+                    <input type="text" [name]="mainIndex" [id]="mainIndex" formControlName="answer">
+                </div>
+
+                <div style="border: 2px solid red; margin: 10px;" *ngIf="controls.value.questionType === 'radio'">
+                    <label>{{controls.value.question}}</label> <br>
+                    <ng-container *ngFor="let answer of controls.value.answerList; let i = index;">
+                        <input type="radio" [id]="i" formControlName="answer" [value]="answer">
+                        <label [for]="i">{{answer}}</label>
+                    </ng-container>
+                </div>
+
+                <div style="border: 2px solid red; margin: 10px;" *ngIf="controls.value.questionType === 'dropdown'">
+                    <label>{{controls.value.question}}</label> <br>
+                    <select formControlName="answer">
+                        <ng-container *ngFor="let answer of controls.value.answerList;">
+                            <option [value]="answer"> {{answer}} </option>
+                        </ng-container>
+                    </select>
+                </div>
+
+                <div style="border: 2px solid red; margin: 10px;" *ngIf="controls.value.questionType === 'checkbox'">
+                    <label>{{controls.value.question}}</label> <br>
+                    <ng-container *ngFor="let answer of controls.value.answerList; let i = index;">
+                        <label (click)="checked()"><input type="checkbox" formControlName="answer" [value]="answer"> {{answer}}</label>
+                    </ng-container>
+                </div>
+
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+    <button type="submit">Submit</button>
+</form>

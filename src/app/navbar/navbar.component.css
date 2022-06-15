@@ -1,0 +1,24 @@
+ul li a {
+    text-decoration: none;
+    display: inline-block;
+    background-color: rgb(41, 41, 123);
+    width: 100%;
+    margin-bottom: 10px;
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.active {
+    background-color: coral !important;
+}
+
+nav {
+    margin-right: 20px;
+}
