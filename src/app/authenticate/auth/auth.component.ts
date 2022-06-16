@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthorizedUser } from '../models/authorized-user.model';
 import { user } from '../models/user.model';
 import { FirebaseAuthService } from '../../services/firebase-auth.service';
@@ -21,6 +21,7 @@ export class AuthComponent implements OnInit {
   @ViewChild('authForm') authForm!: NgForm;
   authResp$!: Observable<AuthorizedUser>;
   isAuthenticating: boolean = false;
+  closeSub!: Subscription;
   @ViewChild('placHolderRef', { read: ViewContainerRef }) placeHolder!: ViewContainerRef;
   // @ViewChild(PlaceHolderDirective) placeHolder!: PlaceHolderDirective;
 
@@ -47,10 +48,12 @@ export class AuthComponent implements OnInit {
       error: (error: string) => {
         this.isAuthenticating = false;
         this.errorMsg = error;
+        this.placeHolder.clear();
         let compInstance = this.placeHolder.createComponent(AlertModalComponent);
         compInstance.instance.errorMsg = this.errorMsg;
-        compInstance.instance.closeEvent.subscribe((data) => {
+        this.closeSub = compInstance.instance.closeEvent.subscribe((data) => {
           this.errorMsg = '';
+          this.closeSub.unsubscribe();
           this.placeHolder.clear();
         })
 
