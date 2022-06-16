@@ -2,16 +2,19 @@ import { NgModule } from '@angular/core';
 import { AuthenticateRoutingModule } from './authenticate-routing.module';
 import { AuthComponent } from './auth/auth.component';
 import { SharedModule } from '../shared/shared.module';
+import { PlaceHolderDirective } from './directives/place-holder.directive';
 
 
 @NgModule({
   declarations: [
-    AuthComponent
+    AuthComponent,
+    PlaceHolderDirective
   ],
   imports: [
     SharedModule,
     AuthenticateRoutingModule
-  ], providers: [
+  ],
+  providers: [
   ]
 })
 export class AuthenticateModule { }

@@ -16,8 +16,8 @@
             <button type="button" (click)="isLogin = !isLogin">Switch to {{!isLogin? 'Login':'SignUp'}}</button>
         </div>
     </form>
-    <p class="error" *ngIf="errorMsg !== ''">
-        {{errorMsg}}
-    </p>
 </div>
+<ng-container #placHolderRef></ng-container>
+<!-- <ng-template appPlaceHolder></ng-template> -->
+<!-- <app-alert-modal *ngIf="errorMsg !== ''" (closeEvent)="errorMsg = ''" [errorMsg]="errorMsg"></app-alert-modal> -->
 <app-loader-spinner *ngIf="isAuthenticating"></app-loader-spinner>

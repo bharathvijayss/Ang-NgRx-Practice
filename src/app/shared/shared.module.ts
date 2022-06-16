@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoaderSpinnerComponent } from './loader-spinner/loader-spinner.component';
+import { AlertModalComponent } from './alert-modal/alert-modal.component';
 
 
 
 @NgModule({
   declarations: [
-    LoaderSpinnerComponent
+    LoaderSpinnerComponent,
+    AlertModalComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { LoaderSpinnerComponent } from './loader-spinner/loader-spinner.componen
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    LoaderSpinnerComponent
+    LoaderSpinnerComponent,
+    AlertModalComponent
   ]
 })
 export class SharedModule { }

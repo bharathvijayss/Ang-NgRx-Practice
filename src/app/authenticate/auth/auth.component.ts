@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -6,6 +6,8 @@ import { AuthorizedUser } from '../models/authorized-user.model';
 import { user } from '../models/user.model';
 import { FirebaseAuthService } from '../../services/firebase-auth.service';
 import { TokenInfo } from '../models/token-info.model';
+import { PlaceHolderDirective } from '../directives/place-holder.directive';
+import { AlertModalComponent } from 'src/app/shared/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-auth',
@@ -19,8 +21,10 @@ export class AuthComponent implements OnInit {
   @ViewChild('authForm') authForm!: NgForm;
   authResp$!: Observable<AuthorizedUser>;
   isAuthenticating: boolean = false;
+  @ViewChild('placHolderRef', { read: ViewContainerRef }) placeHolder!: ViewContainerRef;
+  // @ViewChild(PlaceHolderDirective) placeHolder!: PlaceHolderDirective;
 
-  constructor(private firebackend: FirebaseAuthService, private router: Router) { }
+  constructor(private firebackend: FirebaseAuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
   }
@@ -43,6 +47,20 @@ export class AuthComponent implements OnInit {
       error: (error: string) => {
         this.isAuthenticating = false;
         this.errorMsg = error;
+        let compInstance = this.placeHolder.createComponent(AlertModalComponent);
+        compInstance.instance.errorMsg = this.errorMsg;
+        compInstance.instance.closeEvent.subscribe((data) => {
+          this.errorMsg = '';
+          this.placeHolder.clear();
+        })
+
+        // let componentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertModalComponent);
+        // let componentInstance = this.placeHolder.viewContainerRef.createComponent(componentFactory).instance;
+        // componentInstance.errorMsg = this.errorMsg;
+        // componentInstance.closeEvent.subscribe((data) => {
+        //   this.errorMsg = '';
+        //   this.placeHolder.viewContainerRef.clear();
+        // })
       }
     })
   }
