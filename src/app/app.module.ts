@@ -8,6 +8,10 @@ import { AuthenticateModule } from './authenticate/authenticate.module';
 import { CoreModule } from './core/core.module';
 import { PostModule } from './post/post.module';
 import { NavbarComponent } from './navbar/navbar.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtools, StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -18,10 +22,13 @@ import { NavbarComponent } from './navbar/navbar.component';
   imports: [
     BrowserModule,   
     SharedModule,
-    AuthenticateModule,
-    PostModule,
     CoreModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      logOnly: environment.production
+    }),
+    EffectsModule.forRoot([])    
   ],
   providers: [],
   bootstrap: [AppComponent]

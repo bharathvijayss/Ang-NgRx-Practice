@@ -4,9 +4,8 @@ import { AuthGuardService } from '../services/authguard.service';
 import { PostDetailsComponent } from './post-details/post-details.component';
 
 const routes: Routes = [{
-  path: 'posts',
-  component: PostDetailsComponent,
-  canActivate: [AuthGuardService]
+  path: '',
+  component: PostDetailsComponent
 }];
 
 @NgModule({
