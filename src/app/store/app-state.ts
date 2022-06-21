@@ -1,5 +1,7 @@
 import { CounterState } from "../counter/store/counter.state";
+import { postState } from "../post/store/post.state";
 
 export interface AppState {
-    counter: CounterState
+    counter: CounterState,
+    post: postState
 }

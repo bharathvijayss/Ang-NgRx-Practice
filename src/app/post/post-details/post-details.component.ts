@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, NgModel } from '@angular/forms';
-import { FirebaseAuthService } from 'src/app/services/firebase-auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
+import { AppState } from 'src/app/store/app-state';
 import { Post } from '../models/post.model';
+import { deletePostStart, getPostStart } from '../store/post.action';
+import { getallPost } from '../store/post.selector';
 
 @Component({
   selector: 'app-post-details',
@@ -10,57 +13,35 @@ import { Post } from '../models/post.model';
 })
 export class PostDetailsComponent implements OnInit {
 
-  @ViewChild('postForm') postForm!: NgForm;
-  errorMsg: string = '';
-  postingData: boolean = false;
-  postsData: Post[] = [];
+  postsData$!: Observable<Post[]>
+  show: boolean = false;
+  postSubscription!: Subscription;
 
-  constructor(private firebackend: FirebaseAuthService) { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
+    this.store.dispatch(getPostStart());
     this.getPostData();
   }
 
-  postData() {
-    this.postingData = true;
-    this.firebackend.postData(this.postForm.value as Post).subscribe({
-      next: (response) => {
-        this.postingData = false;
-        this.getPostData();
-      },
-      error: (error) => {
-        this.postingData = false;
-        this.errorMsg = error;
-      }
-    })
-  }
-
   getPostData() {
-    this.postingData = true;
-    this.firebackend.getpostData().subscribe({
-      next: (response) => {
-        this.postsData = response as Post[];
-        this.postingData = false;
-      },
-      error: (error) => {
-        this.postingData = false;
-        this.errorMsg = error;
-      }
-    })
+    this.postsData$ = this.store.select(getallPost);
+    // this.postSubscription = this.postsData$.subscribe(data => {
+    //   console.log(data);
+    //   if (data.length > 0) {
+    //     this.show = true;
+    //   } else {
+    //     this.show = false;
+    //   }
+    // })
   }
 
-  getPostNameErrors(ref: NgModel) {
-    if (ref?.errors?.['required']) {
-      return 'Post Name is Mandatory';
-    }
-    return null;
+  deletePost(id: string) {
+    this.store.dispatch(deletePostStart({ id }));
   }
 
-  getPostedByErrors(ref: NgModel) {
-    if (ref?.errors?.['required']) {
-      return 'PostedBy who is Mandatory';
-    }
-    return null;
+  ngOnDestroy() {
+    // this.postSubscription.unsubscribe();
   }
 
 }

@@ -1,0 +1,19 @@
+<div>
+    <h4 style="text-decoration: underline;">Edit Post Data Form</h4>
+    <form #postForm="ngForm" (ngSubmit)="EditData()">
+        <div>
+            <label for="postName">Post Name:</label> <br>
+            <input type="text" name="postName" id="postName" [ngModel]="postNamevar" #postNameRef="ngModel" required>
+            <p *ngIf="postNameRef.touched && postNameRef.invalid" class="error">{{getPostNameErrors(postNameRef)}}</p>
+        </div>
+        <div style="margin-top: 10px;">
+            <label for="postedBy">Post By:</label> <br>
+            <input type="text" name="postedBy" id="postedBy" [ngModel]="postedByvar" #postedByRef="ngModel" required>
+            <p *ngIf="postedByRef.touched && postedByRef.invalid" class="error">{{getPostedByErrors(postedByRef)}}</p>
+        </div>
+        <div style="margin-top: 10px;">
+            <button type="submit" [disabled]="postForm.invalid">Edit Post</button> |
+            <button type="reset">Clear Data</button>
+        </div>
+    </form>
+</div>
