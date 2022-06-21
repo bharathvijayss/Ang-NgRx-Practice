@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { AppState } from 'src/app/store/app-state';
 import { Post } from '../models/post.model';
 import { updatePostStart } from '../store/post.action';
@@ -20,6 +20,7 @@ export class EditPostComponent implements OnInit {
   postedByvar: string = '';
   editPostData!: Post;
   paramKey!: string;
+  storeSelect!: Subscription;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
@@ -28,7 +29,7 @@ export class EditPostComponent implements OnInit {
       //@ts-ignore
       this.paramKey = data.get('id');
       // this.store.select(getPostForId, { key: this.paramKey }).subscribe((data) => {
-      this.store.select(getPostForId(this.paramKey)).subscribe((data) => {
+      this.storeSelect = this.store.select(getPostForId(this.paramKey)).subscribe((data) => {
         //@ts-ignore
         this.setFormData(data);
       })
@@ -58,4 +59,9 @@ export class EditPostComponent implements OnInit {
     }
     return null;
   }
+
+  ngOnDestroy() {
+    this.storeSelect.unsubscribe();
+  }
+
 }
