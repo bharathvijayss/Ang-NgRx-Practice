@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -34,38 +34,38 @@ export class RegistrationFormComponent {
     answer: ''
   }]
 
-  dynamicForm!: FormGroup;
+  dynamicForm!: UntypedFormGroup;
   constructor(private activeRoute: ActivatedRoute, private router: Router) {
 
   }
 
   ngOnInit() {
-    this.dynamicForm = new FormGroup({
-      runtimeControls: new FormArray([])
+    this.dynamicForm = new UntypedFormGroup({
+      runtimeControls: new UntypedFormArray([])
     });
     this.questionAnswerData.forEach((questionAnswer) => {
-      let tempFormGroup = new FormGroup({});
+      let tempFormGroup = new UntypedFormGroup({});
       for (let val in questionAnswer) {
         if (val !== 'answerList') {
-          tempFormGroup.setControl(val, new FormControl(questionAnswer[val]));
+          tempFormGroup.setControl(val, new UntypedFormControl(questionAnswer[val]));
         } else {
-          let tempFormControl = new FormArray([]);
+          let tempFormControl = new UntypedFormArray([]);
           if (questionAnswer[val] !== null) {
             for (let answerVal of questionAnswer[val]) {
-              tempFormControl.push(new FormControl(answerVal));
+              tempFormControl.push(new UntypedFormControl(answerVal));
             }
           }
           tempFormGroup.setControl(val, tempFormControl);
         }
       }
       // let tempFormControl = new FormControl(tempFormGroup);
-      (<FormArray>this.dynamicForm.controls['runtimeControls']).push(tempFormGroup);
+      (<UntypedFormArray>this.dynamicForm.controls['runtimeControls']).push(tempFormGroup);
     });
     // console.log(this.MainControls);
   }
 
   get MainControls() {
-    return (<FormArray>this.dynamicForm.controls['runtimeControls']).controls;
+    return (<UntypedFormArray>this.dynamicForm.controls['runtimeControls']).controls;
   }
 
   submited() {
