@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
 import { TokenInfo } from './authenticate/models/token-info.model';
 import { FirebaseAuthService } from './services/firebase-auth.service';
+import { AppState } from './store/app-state';
+import { getErrorMessage, getLoadingState } from './store/shared.selector';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +15,10 @@ import { FirebaseAuthService } from './services/firebase-auth.service';
 export class AppComponent {
 
   clearAutoLogout: any;
-
-  constructor(private firebackend: FirebaseAuthService, private router: Router) { }
-
+  loading!: boolean;
+  errorMsg$!: Observable<string>;
+  sub!: Subscription;
+  constructor(private firebackend: FirebaseAuthService, private router: Router, private store: Store<AppState>) { }
 
   ngOnInit() {
     this.autoLogin();
@@ -24,6 +29,14 @@ export class AppComponent {
         }
       }
     });
+    this.getLoaderAndError();
+  }
+
+  getLoaderAndError() {
+    this.sub = this.store.select(getLoadingState).subscribe(data => {
+      this.loading = data;
+    });
+    this.errorMsg$ = this.store.select(getErrorMessage);
   }
 
   autoLogin() {
@@ -59,6 +72,10 @@ export class AppComponent {
   logoutClicked(event?: boolean) {
     clearTimeout(this.clearAutoLogout);
     this.logout();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }

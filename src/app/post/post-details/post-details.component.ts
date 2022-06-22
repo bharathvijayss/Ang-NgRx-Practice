@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { AppState } from 'src/app/store/app-state';
+import { setLoadingSpinner } from 'src/app/store/shared.action';
 import { Post } from '../models/post.model';
 import { deletePostStart, getPostStart } from '../store/post.action';
 import { getallPost } from '../store/post.selector';
@@ -17,7 +18,9 @@ export class PostDetailsComponent implements OnInit {
   show: boolean = false;
   postSubscription!: Subscription;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>) { 
+    this.store.dispatch(setLoadingSpinner({ loading: true }));
+  }
 
   ngOnInit(): void {
     this.store.dispatch(getPostStart());
@@ -37,6 +40,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   deletePost(id: string) {
+    this.store.dispatch(setLoadingSpinner({ loading: true }));
     this.store.dispatch(deletePostStart({ id }));
   }
 

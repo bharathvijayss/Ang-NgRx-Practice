@@ -3,9 +3,9 @@ import { Post } from "../models/post.model";
 import { postState } from "./post.state";
 
 
-export const postStateName = 'post';
+export const POST_STATE_NAME = 'post';
 
-const postStateData = createFeatureSelector<postState>(postStateName);
+const postStateData = createFeatureSelector<postState>(POST_STATE_NAME);
 
 export const getallPost = createSelector(postStateData, (state) => {
     return state.posts;

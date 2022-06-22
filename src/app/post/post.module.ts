@@ -5,7 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { PostEffects } from './store/post.effects';
-import { postStateName } from './store/post.selector';
+import { POST_STATE_NAME } from './store/post.selector';
 import { postReducer } from './store/post.reducer';
 import { AddPostComponent } from './add-post/add-post.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
@@ -21,7 +21,7 @@ import { PostService } from './services/post.service';
   imports: [
     SharedModule,
     PostRoutingModule,
-    StoreModule.forFeature(postStateName, postReducer),
+    StoreModule.forFeature(POST_STATE_NAME, postReducer),
     EffectsModule.forFeature([PostEffects])
   ], 
   providers: [

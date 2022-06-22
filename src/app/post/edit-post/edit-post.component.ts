@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription, tap } from 'rxjs';
 import { AppState } from 'src/app/store/app-state';
+import { setLoadingSpinner } from 'src/app/store/shared.action';
 import { Post } from '../models/post.model';
 import { updatePostStart } from '../store/post.action';
 import { getPostForId } from '../store/post.selector';
@@ -43,6 +44,7 @@ export class EditPostComponent implements OnInit {
   }
 
   EditData() {
+    this.store.dispatch(setLoadingSpinner({ loading: true }));
     this.store.dispatch(updatePostStart({ key: this.paramKey, ...this.postForm.value }));
   }
 

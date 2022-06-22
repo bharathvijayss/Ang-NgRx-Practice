@@ -1,3 +1,4 @@
+<div *ngIf="errorMsg$ | async as ErrorMsg" class="error">{{ErrorMsg}}</div>
 <div style="display: flex; flex-direction: row; margin: 1rem;">
     <div style="width: 20%; border-right: 2px solid black; ">
         <app-navbar (logoutEvent)="logoutClicked($event)"></app-navbar>
@@ -6,3 +7,4 @@
         <router-outlet></router-outlet>
     </div>
 </div>
+<app-loader-spinner *ngIf="loading"></app-loader-spinner>

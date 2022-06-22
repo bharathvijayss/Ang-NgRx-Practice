@@ -1,8 +1,6 @@
-import { ActivatedRouteSnapshot } from "@angular/router";
 import { Action, createReducer, on } from "@ngrx/store";
 import { Post } from "../models/post.model";
 import { addPostSuccess, deletePostSuccess, getPostSuccess, updatePostSuccess } from "./post.action";
-import { postStateName } from "./post.selector";
 import { initialState, postState } from "./post.state";
 
 export const _postReducer = createReducer(initialState,

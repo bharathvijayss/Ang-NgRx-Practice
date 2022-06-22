@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/app-state';
+import { setLoadingSpinner } from 'src/app/store/shared.action';
 import { addPostStart } from '../store/post.action';
 
 @Component({
@@ -19,6 +20,7 @@ export class AddPostComponent implements OnInit {
   }
 
   postData() {
+    this.store.dispatch(setLoadingSpinner({ loading: true }));
     this.store.dispatch(addPostStart(this.postForm.value));
   }
 
