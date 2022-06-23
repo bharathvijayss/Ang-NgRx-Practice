@@ -19,7 +19,7 @@ import { AuthEffects } from './store/auth.effects';
   imports: [
     SharedModule,
     AuthenticateRoutingModule,
-    EffectsModule.forFeature([AuthEffects])
+    EffectsModule.forFeature([AuthEffects]),
   ],
   providers: [
   ]

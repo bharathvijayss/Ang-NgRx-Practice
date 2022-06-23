@@ -16,12 +16,12 @@ import { AlertModalComponent } from './alert-modal/alert-modal.component';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    // HttpClientModule
   ], exports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
+    // HttpClientModule,
     LoaderSpinnerComponent,
     AlertModalComponent
   ]

@@ -15,6 +15,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { SHARED_STATE_NAME } from './store/shared.selector';
 import { sharedReducer, _sharedReducer } from './store/shared.reducer';
 import { appReducer } from './store/app-state';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthorizationInterceptorService } from './services/authorization-interceptor.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { appReducer } from './store/app-state';
     NavbarComponent
   ],
   imports: [
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
     BrowserModule,
     SharedModule,
     CoreModule,
@@ -32,9 +38,10 @@ import { appReducer } from './store/app-state';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -22,7 +22,7 @@ import { PostService } from './services/post.service';
     SharedModule,
     PostRoutingModule,
     StoreModule.forFeature(POST_STATE_NAME, postReducer),
-    EffectsModule.forFeature([PostEffects])
+    EffectsModule.forFeature([PostEffects]),
   ], 
   providers: [
     PostService
