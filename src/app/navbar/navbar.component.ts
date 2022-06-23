@@ -1,6 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-
-import { FirebaseAuthService } from '../services/firebase-auth.service';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { logoutStart } from '../authenticate/store/auth.action';
+import { getAuthState, getToken } from '../authenticate/store/auth.selector';
+import { AppState } from '../store/app-state';
 
 @Component({
   selector: 'app-navbar',
@@ -10,20 +13,22 @@ import { FirebaseAuthService } from '../services/firebase-auth.service';
 export class NavbarComponent implements OnInit {
 
   authenticated: boolean = false;
-  @Output() logoutEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  subs!: Subscription;
 
-  constructor(private firebackend: FirebaseAuthService) { }
+  constructor(private store: Store<AppState>) { }
 
   ngOnInit(): void {
-    this.firebackend.authenticatedSub$.subscribe({
-      next: (data) => {
-        this.authenticated = (data === null ? false : true);
-      }
+    this.subs = this.store.select(getAuthState).subscribe((data) => {
+      this.authenticated = data;
     })
   }
 
   logout() {
-    this.logoutEvent.emit(true);
+    this.store.dispatch(logoutStart());
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
 }

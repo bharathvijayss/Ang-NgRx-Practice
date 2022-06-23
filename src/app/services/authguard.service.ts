@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
-import { map, Observable, take } from "rxjs";
+import { Store } from "@ngrx/store";
+import { map, Observable, Subscription, take } from "rxjs";
+import { getAuthState, getToken } from "../authenticate/store/auth.selector";
+import { AppState } from "../store/app-state";
 import { FirebaseAuthService } from "./firebase-auth.service";
 
 @Injectable({
@@ -8,17 +11,16 @@ import { FirebaseAuthService } from "./firebase-auth.service";
 })
 export class AuthGuardService implements CanActivate {
 
-    constructor(private firebackend: FirebaseAuthService, private router: Router) { }
+    subscribedData!: boolean | UrlTree;
+
+    constructor(private firebackend: FirebaseAuthService, private router: Router, private store: Store<AppState>) {
+        this.store.select(getAuthState).pipe(take(1)).subscribe((data) => {
+            this.subscribedData = data === false ? this.router.createUrlTree(['/auth']) : true;
+        })
+    }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-        return this.firebackend.authenticatedSub$.pipe(take(1), map(
-            (data) => {
-                if (data === null) {
-                    return this.router.createUrlTree(['/auth']);
-                } else {
-                    return true;
-                }
-            }
-        ));
+        return this.subscribedData;
     }
+
 }

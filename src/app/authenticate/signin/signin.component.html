@@ -1,0 +1,17 @@
+<h4 style="text-decoration: underline;">Login Form</h4>
+<form #authForm="ngForm" (ngSubmit)="login()">
+    <div style="margin-bottom: 10px;">
+        <label for="uname">Email:</label> <br>
+        <input type="email" name="email" ngModel #emailRef="ngModel" required email>
+        <p class="error" *ngIf="emailRef.touched && emailRef.invalid">{{fetchErrorEmail(emailRef)}}</p>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <label for="pwd">Password:</label> <br>
+        <input type="password" name="password" ngModel #passwordRef="ngModel" required minlength="6">
+        <p class="error" *ngIf="passwordRef.touched && passwordRef.invalid">{{fetchErrorPassword(passwordRef)}}</p>
+    </div>
+    <div>
+        <button type="submit" [disabled]="authForm.invalid"> Login </button> |
+        <button type="button" (click)="switchToSignUp()">Switch to SignUp</button>
+    </div>
+</form>

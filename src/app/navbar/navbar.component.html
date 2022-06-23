@@ -1,7 +1,8 @@
 <nav>
     <ul>
         <ng-container *ngIf="!authenticated">
-            <li><a routerLink="auth" routerLinkActive="active">Login/SingUp Form</a></li>
+            <li><a routerLink="auth/signUp" routerLinkActive="active">SingUp Form</a></li>
+            <li><a routerLink="auth/signIn" routerLinkActive="active">Login Form</a></li>
         </ng-container>
         <ng-container *ngIf="authenticated">
             <li><a (click)="logout()">Logout</a></li>

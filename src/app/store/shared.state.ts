@@ -1,4 +1,3 @@
-
 export interface sharedState {
     errorMsg: string;
     showLoader: boolean;

@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { AuthorizedUser } from '../authenticate/models/authorized-user.model';
+import { TokenInfo } from '../authenticate/models/token-info.model';
 import { user } from '../authenticate/models/user.model';
 import { Post } from '../post/models/post.model';
 
@@ -18,13 +19,21 @@ export class FirebaseAuthService {
   constructor(private http: HttpClient) { }
 
   signIn(payload: user): Observable<AuthorizedUser> {
-    payload.returnSecureToken = true
-    return this.http.post<AuthorizedUser>(`${this.firebaseEndPointAuth}signInWithPassword?key=${this.webApiKey}`, payload).pipe(catchError(this.handleError))
+    const modifiedPayLoad = { ...payload, returnSecureToken: true };
+    return this.http.post<AuthorizedUser>(`${this.firebaseEndPointAuth}signInWithPassword?key=${this.webApiKey}`, modifiedPayLoad);
+  }
+
+  setAuth(data: TokenInfo) {
+    localStorage.setItem('tokenInfo', JSON.stringify(data));
   }
 
   signUp(payload: user): Observable<AuthorizedUser> {
-    payload.returnSecureToken = true
-    return this.http.post<AuthorizedUser>(`${this.firebaseEndPointAuth}signUp?key=${this.webApiKey}`, payload).pipe(catchError(this.handleError))
+    const modifiedPayLoad = { ...payload, returnSecureToken: true };
+    return this.http.post<AuthorizedUser>(`${this.firebaseEndPointAuth}signUp?key=${this.webApiKey}`, modifiedPayLoad);
+  }
+
+  clearAuth() {
+    localStorage.removeItem('tokenInfo');
   }
 
   postData(payload: Post) {
