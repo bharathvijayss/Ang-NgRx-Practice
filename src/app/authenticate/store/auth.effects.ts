@@ -20,10 +20,10 @@ export class AuthEffects {
                 const tokenData: TokenInfo = {
                     idToken: res.idToken,
                     refreshToken: res.refreshToken,
-                    expiresIn: new Date(new Date().getTime() + +res.expiresIn)
+                    expiresIn: new Date(new Date().getTime() + +res.expiresIn * 1000)
                 };
                 this.firebackend.setAuth(tokenData);
-                this.store.dispatch(setErrorMessage({ message: '' }));                
+                this.store.dispatch(setErrorMessage({ message: '' }));
                 return loginSuccess({ tokenData, redirect: true });
             }), catchError((error) => {
                 return of(setErrorMessage({ message: error.error.error.message }));
@@ -57,7 +57,7 @@ export class AuthEffects {
         return this.actions$.pipe(ofType(...[loginSuccess, signUpSuccess]), tap((data) => {
             // this.store.dispatch(autoLogout());
             if (data.redirect) {
-              this.router.navigateByUrl('/posts');
+                this.router.navigateByUrl('/posts');
             }
         }))
     }, { dispatch: false })

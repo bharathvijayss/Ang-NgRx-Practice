@@ -18,6 +18,7 @@ import { appReducer } from './store/app-state';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizationInterceptorService } from './services/authorization-interceptor.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthEffects } from './authenticate/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AuthEffects]),
   ],
   providers: [
   ],

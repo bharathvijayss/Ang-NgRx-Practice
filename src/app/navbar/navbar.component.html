@@ -5,7 +5,7 @@
             <li><a routerLink="auth/signIn" routerLinkActive="active">Login Form</a></li>
         </ng-container>
         <ng-container *ngIf="authenticated">
-            <li><a (click)="logout()">Logout</a></li>
+            <li><a style="cursor: pointer;" (click)="logout()">Logout</a></li>
             <li><a routerLink="posts" routerLinkActive="active">See All Post Details</a></li>
             <li><a routerLink="counter" routerLinkActive="active">Counter</a></li>
         </ng-container>
