@@ -1,10 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { AuthorizedUser } from '../authenticate/models/authorized-user.model';
 import { TokenInfo } from '../authenticate/models/token-info.model';
 import { user } from '../authenticate/models/user.model';
+import { logoutStart } from '../authenticate/store/auth.action';
 import { Post } from '../post/models/post.model';
+import { AppState } from '../store/app-state';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +18,9 @@ export class FirebaseAuthService {
   firebaseEndPointPost: string = 'https://expertrecassignment-default-rtdb.firebaseio.com/'
   webApiKey: string = 'AIzaSyCa7BzWMl7FLXeSkdJgpod5JIdiunGUnqU';
   authenticatedSub$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(null);
+  timeoutSubs!: any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private store: Store<AppState>) { }
 
   signIn(payload: user): Observable<AuthorizedUser> {
     const modifiedPayLoad = { ...payload, returnSecureToken: true };
@@ -25,6 +29,34 @@ export class FirebaseAuthService {
 
   setAuth(data: TokenInfo) {
     localStorage.setItem('tokenInfo', JSON.stringify(data));
+    this.setAutoLogout(data);
+  }
+
+  getAuth() {
+    const authData = localStorage.getItem('tokenInfo');
+    let modifiedauthData: TokenInfo;
+    if (authData) {
+      modifiedauthData = JSON.parse(authData, (key, value) => {
+        if (key === 'expiresIn') {
+          return new Date(value);
+        }
+        return value;
+      });
+      if (modifiedauthData.expiresIn > new Date()) {
+        this.setAutoLogout(modifiedauthData);
+        return modifiedauthData;
+      } else {
+        localStorage.removeItem('tokenInfo');
+      }
+    }
+    return null;
+  }
+
+  setAutoLogout(data: TokenInfo) {
+    const timeout = data.expiresIn.getTime() - new Date().getTime();
+    this.timeoutSubs = setTimeout(() => {
+      this.store.dispatch(logoutStart());
+    }, timeout);
   }
 
   signUp(payload: user): Observable<AuthorizedUser> {
@@ -33,32 +65,11 @@ export class FirebaseAuthService {
   }
 
   clearAuth() {
+    if (this.timeoutSubs) {
+      clearTimeout(this.timeoutSubs);
+      this.timeoutSubs = null;
+    }    
     localStorage.removeItem('tokenInfo');
-  }
-
-  postData(payload: Post) {
-    return this.http.post<any>(`${this.firebaseEndPointPost}posts.json`, payload).pipe(catchError(this.handleError))
-  }
-
-  getpostData(): Observable<Post[]> {
-    return this.http.get<Post[]>(`${this.firebaseEndPointPost}posts.json`).pipe(map((data) => {
-      let result: Post[] = [];
-      for (let key in data) {
-        result.push({ ...data[key], key });
-      }
-      return result;
-    }), catchError(this.handleError))
-  }
-
-  handleError(error: HttpErrorResponse) {
-    console.log(error);
-    let errorMessage: string = '';
-    if (error.error.error instanceof Error) {
-      errorMessage = `client Side Error: ${error?.error?.error?.message ?? error?.error?.error}`;
-    } else {
-      errorMessage = `Server Side Error: ${error?.error?.error?.message ?? error?.error?.error}`;
-    }
-    return throwError(() => errorMessage);
   }
 
 }

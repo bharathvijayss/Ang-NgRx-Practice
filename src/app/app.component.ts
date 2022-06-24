@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { TokenInfo } from './authenticate/models/token-info.model';
+import { loginSuccess } from './authenticate/store/auth.action';
 import { FirebaseAuthService } from './services/firebase-auth.service';
 import { AppState } from './store/app-state';
 import { getErrorMessage, getLoadingState } from './store/shared.selector';
@@ -14,7 +15,7 @@ import { getErrorMessage, getLoadingState } from './store/shared.selector';
 })
 export class AppComponent {
 
-  clearAutoLogout: any;
+  // clearAutoLogout: any;
   loading!: boolean;
   errorMsg$!: Observable<string>;
   sub!: Subscription;
@@ -22,13 +23,14 @@ export class AppComponent {
 
   ngOnInit() {
     this.autoLogin();
-    this.firebackend.authenticatedSub$.subscribe({
-      next: (data) => {
-        if (data !== null) {
-          this.autoLogout(data);
-        }
-      }
-    });
+    // this.autoLogin();
+    // this.firebackend.authenticatedSub$.subscribe({
+    //   next: (data) => {
+    //     if (data !== null) {
+    //       this.autoLogout(data);
+    //     }
+    //   }
+    // });
     this.getLoaderAndError();
   }
 
@@ -40,39 +42,47 @@ export class AppComponent {
   }
 
   autoLogin() {
-    let data: string | null = localStorage.hasOwnProperty('tokenInfo') ? localStorage.getItem("tokenInfo") : null;
-    let finaldata: TokenInfo;
-    if (data !== null) {
-      finaldata = JSON.parse(data, (key, value) => {
-        return key === 'expiresIn' ? new Date(value) : value
-      });
-      if (finaldata.expiresIn > new Date()) {
-        this.firebackend.authenticatedSub$.next(finaldata);
-        clearTimeout(this.clearAutoLogout);
-        this.autoLogout(finaldata);
-      } else {
-        this.logoutClicked();
-      }
+    const tokenInformation: TokenInfo | null = this.firebackend.getAuth();
+    if (tokenInformation) {
+      const redirect: boolean = window.location.pathname.includes('auth');
+      this.store.dispatch(loginSuccess({ tokenData: tokenInformation, redirect }))
     }
   }
 
-  autoLogout(data: TokenInfo) {
-    let time = (data.expiresIn.getTime() - new Date().getTime());
-    this.clearAutoLogout = setTimeout(() => {
-      this.logout();
-    }, time)
-  }
+  // autoLogin() {
+  //   let data: string | null = localStorage.hasOwnProperty('tokenInfo') ? localStorage.getItem("tokenInfo") : null;
+  //   let finaldata: TokenInfo;
+  //   if (data !== null) {
+  //     finaldata = JSON.parse(data, (key, value) => {
+  //       return key === 'expiresIn' ? new Date(value) : value
+  //     });
+  //     if (finaldata.expiresIn > new Date()) {
+  //       this.firebackend.authenticatedSub$.next(finaldata);
+  //       clearTimeout(this.clearAutoLogout);
+  //       this.autoLogout(finaldata);
+  //     } else {
+  //       this.logoutClicked();
+  //     }
+  //   }
+  // }
 
-  logout() {
-    localStorage.removeItem("tokenInfo");
-    this.firebackend.authenticatedSub$.next(null);
-    this.router.navigateByUrl('auth');
-  }
+  // autoLogout(data: TokenInfo) {
+  //   let time = (data.expiresIn.getTime() - new Date().getTime());
+  //   this.clearAutoLogout = setTimeout(() => {
+  //     this.logout();
+  //   }, time)
+  // }
 
-  logoutClicked(event?: boolean) {
-    clearTimeout(this.clearAutoLogout);
-    this.logout();
-  }
+  // logout() {
+  //   localStorage.removeItem("tokenInfo");
+  //   this.firebackend.authenticatedSub$.next(null);
+  //   this.router.navigateByUrl('auth');
+  // }
+
+  // logoutClicked(event?: boolean) {
+  //   clearTimeout(this.clearAutoLogout);
+  //   this.logout();
+  // }
 
   ngOnDestroy() {
     this.sub.unsubscribe();

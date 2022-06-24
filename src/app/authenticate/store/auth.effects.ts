@@ -23,8 +23,8 @@ export class AuthEffects {
                     expiresIn: new Date(new Date().getTime() + +res.expiresIn)
                 };
                 this.firebackend.setAuth(tokenData);
-                this.store.dispatch(setErrorMessage({ message: '' }));
-                return loginSuccess({ tokenData });
+                this.store.dispatch(setErrorMessage({ message: '' }));                
+                return loginSuccess({ tokenData, redirect: true });
             }), catchError((error) => {
                 return of(setErrorMessage({ message: error.error.error.message }));
             }), finalize(() => {
@@ -43,7 +43,7 @@ export class AuthEffects {
                 };
                 this.firebackend.setAuth(tokenData);
                 this.store.dispatch(setErrorMessage({ message: '' }));
-                return signUpSuccess({ tokenData });
+                return signUpSuccess({ tokenData, redirect: true });
             }), catchError((error) => {
                 console.log(error);
                 return of(setErrorMessage({ message: error.error.error.message }));
@@ -55,7 +55,10 @@ export class AuthEffects {
 
     loginOrSignupSuccess$ = createEffect(() => {
         return this.actions$.pipe(ofType(...[loginSuccess, signUpSuccess]), tap((data) => {
-            this.router.navigateByUrl('/posts');
+            // this.store.dispatch(autoLogout());
+            if (data.redirect) {
+              this.router.navigateByUrl('/posts');
+            }
         }))
     }, { dispatch: false })
 

@@ -15,4 +15,4 @@ export const getExpirtyDate = createSelector(sharedAuthStateData, (state) => {
 
 export const getAuthState = createSelector(sharedAuthStateData, (state) => {
     return state.authData === null ? false : true;
-})
+});
