@@ -26,16 +26,25 @@ export class EditPostComponent implements OnInit {
   constructor(private store: Store<AppState>, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((data) => {
-      //@ts-ignore
-      this.paramKey = data.get('id');
-      // this.store.select(getPostForId, { key: this.paramKey }).subscribe((data) => {
-      this.storeSelect = this.store.select(getPostForId(this.paramKey)).subscribe((data) => {
-        //@ts-ignore
-        this.setFormData(data);
-      })
+    // this.route.paramMap.subscribe((data) => {
+    //   //@ts-ignore
+    //   this.paramKey = data.get('id');
+    //   // this.store.select(getPostForId, { key: this.paramKey }).subscribe((data) => {
+    //   this.storeSelect = this.store.select(getPostForId(this.paramKey)).subscribe((data) => {
+    //     //@ts-ignore
+    //     this.setFormData(data);
+    //   })
 
+    // });
+
+    this.storeSelect = this.store.select(getPostForId).subscribe((data) => {
+      if (data) {
+        this.setFormData(data);
+      } else {
+        this.setFormData({ postedBy: '', postName: '', key: '' });
+      }
     });
+
   }
 
   setFormData(data: Post) {

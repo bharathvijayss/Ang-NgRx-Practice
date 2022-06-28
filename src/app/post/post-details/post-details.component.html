@@ -18,7 +18,8 @@
             <td>{{post.postedBy}}</td>
             <td>
                 <button type="button" [routerLink]="['edit', post.key]"> Edit </button> |
-                <button type="button" (click)="deletePost(post.key)"> Delete </button>
+                <button type="button" (click)="deletePost(post.key)"> Delete </button> |
+                <button type="button" [routerLink]="['details',post.key]"> Details </button>
             </td>
         </tr>
     </table>

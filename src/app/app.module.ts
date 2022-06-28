@@ -19,6 +19,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthorizationInterceptorService } from './services/authorization-interceptor.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthEffects } from './authenticate/store/auth.effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { CustomSerializer } from './store/custom-route-serializer';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import { AuthEffects } from './authenticate/store/auth.effects';
       logOnly: environment.production
     }),
     EffectsModule.forRoot([AuthEffects]),
+    StoreRouterConnectingModule.forRoot({ serializer: CustomSerializer })
   ],
   providers: [
   ],

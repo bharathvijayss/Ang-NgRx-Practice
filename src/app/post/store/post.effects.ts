@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { act, Actions, createEffect, ofType } from "@ngrx/effects";
+import { RouterNavigationAction, ROUTER_NAVIGATION } from "@ngrx/router-store";
 import { Store } from "@ngrx/store";
-import { catchError, exhaustMap, finalize, map, of } from "rxjs";
+import { catchError, exhaustMap, filter, finalize, map, of, switchMap } from "rxjs";
 import { AppState } from "src/app/store/app-state";
 import { setErrorMessage, setLoadingSpinner } from "src/app/store/shared.action";
 import { FireBasePost } from "../models/firebase_post.model";
@@ -82,6 +83,28 @@ export class PostEffects {
             this.router.navigateByUrl('posts');
         }))
     }, { dispatch: false })
+
+    loadSinglePost$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(ROUTER_NAVIGATION), filter((actionParam: RouterNavigationAction) => {
+                return actionParam.payload.routerState.url.startsWith('/posts/details');
+            }), map((actionParam: RouterNavigationAction) => {
+                //@ts-ignore
+                return actionParam.payload.routerState.params.id;
+            }), switchMap((key: string) => {
+                this.store.dispatch(setLoadingSpinner({ loading: true }));
+                return this.postService.getpostDataForId(key).pipe(map((postsData) => {
+                    return getPostSuccess({ posts: [{ ...postsData, key }] })
+                }),
+                    catchError((error) => {
+                        return of(setErrorMessage({ message: `Error Occured: ${error.error.error}` }));
+                    }), finalize(() => {
+                        this.store.dispatch(setLoadingSpinner({ loading: false }));
+                    })
+                )
+            })
+        )
+    })
 
 
 }

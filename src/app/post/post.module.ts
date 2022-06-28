@@ -10,13 +10,15 @@ import { postReducer } from './store/post.reducer';
 import { AddPostComponent } from './add-post/add-post.component';
 import { EditPostComponent } from './edit-post/edit-post.component';
 import { PostService } from './services/post.service';
+import { SinglePostDetailsComponent } from './single-post-details/single-post-details.component';
 
 
 @NgModule({
   declarations: [
     PostDetailsComponent,
     AddPostComponent,
-    EditPostComponent
+    EditPostComponent,
+    SinglePostDetailsComponent
   ],
   imports: [
     SharedModule,

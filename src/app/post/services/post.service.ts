@@ -35,6 +35,10 @@ export class PostService {
     return this.http.delete(`${this.firebaseEndPointPost}posts/${id}.json`);
   }
 
+  getpostDataForId(id: string): Observable<Post> {
+    return this.http.get<Post>(`${this.firebaseEndPointPost}posts/${id}.json`);
+  }
+
   updatePostData(payload: FireBasePost) {
     return this.http.patch(`${this.firebaseEndPointPost}posts.json`, payload);
   }
